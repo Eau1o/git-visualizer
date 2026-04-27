@@ -98,7 +98,7 @@ function renderCommands() {
 
   // 自动跳过无可执行命令的步骤（如 autoModify）
   if (step.availableCommands.length === 0) {
-    setTimeout(advanceStep, 1500);
+    setTimeout(advanceStep, 800);
     return;
   }
 
@@ -197,8 +197,13 @@ function executeCommand(commandId) {
     } else if (commandId === 'branch') {
       animator.fadeInText('🌿 新分支已创建!', gitEngine.canvas.width * 0.3, 80, '#27ae60', () => { isExecuting = false; renderCommands(); });
     } else if (commandId === 'init') {
+      const cw = gitEngine.canvas.width;
+      const ch = gitEngine.canvas.height;
       gitEngine.render(gitEngine.lastState);
-      setTimeout(() => { isExecuting = false; renderCommands(); }, 300);
+      animator.fadeInText('✅ 仓库已初始化!', cw * 0.4, ch * 0.5, '#4ec9b0', () => {
+        isExecuting = false;
+        renderCommands();
+      });
     } else {
       gitEngine.render(gitEngine.lastState);
       setTimeout(() => { isExecuting = false; renderCommands(); }, 200);
@@ -209,7 +214,7 @@ function executeCommand(commandId) {
     const allDone = stepCmds.every(c => executedCommands.has(c));
 
     if (allDone) {
-      setTimeout(advanceStep, 1200);
+      setTimeout(advanceStep, 600);
     } else {
       // 步内还有未执行的命令，提示用户
       setTimeout(() => {
