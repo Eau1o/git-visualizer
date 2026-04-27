@@ -1,9 +1,9 @@
 class GitState {
   constructor() {
-    this.reset();
+    this._initDefaults();
   }
 
-  reset() {
+  _initDefaults() {
     this.initialized = false;
     this.commits = [];
     this.branches = {};
@@ -18,8 +18,6 @@ class GitState {
   init() {
     if (this.initialized) return { success: false, message: '仓库已初始化' };
     this.initialized = true;
-    if (!this.branches) this.branches = {};
-    if (!this.files) this.files = {};
     this.branches['main'] = null;
     this.head = 'main';
     this.currentBranch = 'main';
