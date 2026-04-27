@@ -8,6 +8,7 @@ import { TerminalCommands } from './components/TerminalCommands';
 import { OutputLog } from './components/OutputLog';
 import { AnimationStage } from './components/AnimationStage';
 import { TeachingOverlay } from './components/TeachingOverlay';
+import { FileZones } from './components/FileZones';
 import { GitRenderData } from './types';
 
 type LogEntry = { text: string; type: 'command' | 'success' | 'error' | 'info' | 'welcome' };
@@ -158,8 +159,12 @@ export default function App() {
         />
       }
       center={
-        <div className="w-full h-full relative">
-          <AnimationStage
+        <div className="w-full h-full relative flex flex-col">
+          <div className="flex-shrink-0 px-4 pt-4">
+            <FileZones data={renderData} />
+          </div>
+          <div className="flex-1 min-h-0">
+            <AnimationStage
             operation={animOperation}
             beforeState={beforeState || renderData}
             afterState={renderData}
@@ -167,6 +172,7 @@ export default function App() {
             onComplete={() => {}}
             playerRef={playerRef}
           />
+          </div>
           <TeachingOverlay
             visible={isAnimating}
             operation={animOperation}
