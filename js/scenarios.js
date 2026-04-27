@@ -29,6 +29,7 @@ const SCENARIOS = [
         id: 'local-4',
         instruction: '再创建一些新文件并提交一次，观察 commit 链的变化',
         hint: '💡 每次提交节点会串联成一条历史线',
+        createFiles: ['README.md'],
         availableCommands: ['add','commit'],
         lockedCommands: ['log','branch','checkout','merge','remote','push','pull','clone','restore','reset','revert']
       },
@@ -79,6 +80,7 @@ const SCENARIOS = [
         id: 'branch-4',
         instruction: '在新分支上做两次提交，观察分叉',
         hint: '💡 分支分叉了！main 停在原地，新分支向前走了',
+        createFiles: ['feature.js'],
         availableCommands: ['add','commit'],
         lockedCommands: ['checkout','merge','log','remote','push','pull','clone','restore','reset','revert']
       },
@@ -143,6 +145,7 @@ const SCENARIOS = [
         id: 'undo-1',
         instruction: '先做一次提交作为基础',
         hint: '💡 然后我们来模拟一些"错误"操作',
+        createFiles: ['temp.txt'],
         availableCommands: ['add','commit'],
         lockedCommands: ['restore','reset','revert','log']
       },
