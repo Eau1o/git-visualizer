@@ -1,12 +1,14 @@
 import React from 'react';
-import { interpolate, spring, useCurrentFrame } from 'remotion';
+import { interpolate, spring } from 'remotion';
 import { NodePosition } from '../../types';
+import { useFrame } from './useFrame';
 
 interface CommitNodeProps {
   node: NodePosition;
   isCurrent: boolean;
   isHovered: boolean;
   delay?: number;
+  frame?: number;
 }
 
 export const CommitNode: React.FC<CommitNodeProps> = ({
@@ -14,8 +16,10 @@ export const CommitNode: React.FC<CommitNodeProps> = ({
   isCurrent,
   isHovered,
   delay = 0,
+  frame: _frame,
 }) => {
-  const frame = useCurrentFrame();
+  const ctxFrame = useFrame();
+  const frame = _frame ?? ctxFrame;
   const radius = isCurrent ? 20 : 16;
   const adjustedFrame = Math.max(0, frame - delay);
 

@@ -1,6 +1,7 @@
 import React from 'react';
-import { spring, useCurrentFrame } from 'remotion';
+import { spring } from 'remotion';
 import { NodePosition } from '../../types';
+import { useFrame } from './useFrame';
 
 interface BranchLabelProps {
   branchName: string;
@@ -8,6 +9,7 @@ interface BranchLabelProps {
   isHEAD: boolean;
   color: string;
   delay?: number;
+  frame?: number;
 }
 
 const BRANCH_COLORS: Record<string, string> = {
@@ -22,8 +24,10 @@ export const BranchLabel: React.FC<BranchLabelProps> = ({
   isHEAD,
   color: _color,
   delay = 0,
+  frame: _frame,
 }) => {
-  const frame = useCurrentFrame();
+  const ctxFrame = useFrame();
+  const frame = _frame ?? ctxFrame;
   const bgColor = BRANCH_COLORS[branchName] || '#656D76';
 
   const appear = spring({

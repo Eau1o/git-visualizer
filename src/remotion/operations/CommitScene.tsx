@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, useCurrentFrame, interpolate } from 'remotion';
 import { GitRenderData } from '../../types';
 import { GitGraph } from '../GitGraph';
+import { RemotionFrameProvider } from '../shared/useFrame';
 
 export interface CommitSceneProps {
   beforeState: GitRenderData;
@@ -20,18 +21,20 @@ export const CommitScene: React.FC<CommitSceneProps> = ({
 
   return (
     <AbsoluteFill>
-      <div
-        style={{ opacity: interpolate(frame, [0, duration * 0.2], [1, 0]) }}
-      >
-        <GitGraph renderData={beforeState} hoveredNode={hoveredNode} />
-      </div>
-      <div
-        style={{
-          opacity: interpolate(frame, [duration * 0.2, duration], [0, 1]),
-        }}
-      >
-        <GitGraph renderData={afterState} hoveredNode={hoveredNode} />
-      </div>
+      <RemotionFrameProvider frame={frame}>
+        <div
+          style={{ opacity: interpolate(frame, [0, duration * 0.2], [1, 0]) }}
+        >
+          <GitGraph renderData={beforeState} hoveredNode={hoveredNode} />
+        </div>
+        <div
+          style={{
+            opacity: interpolate(frame, [duration * 0.2, duration], [0, 1]),
+          }}
+        >
+          <GitGraph renderData={afterState} hoveredNode={hoveredNode} />
+        </div>
+      </RemotionFrameProvider>
 
       {/* Pulse ring at end */}
       {frame >= duration - 8 && (

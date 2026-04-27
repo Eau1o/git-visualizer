@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, useCurrentFrame, interpolate, spring } from 'remotion';
 import { GitRenderData } from '../../types';
 import { GitGraph } from '../GitGraph';
+import { RemotionFrameProvider } from '../shared/useFrame';
 
 export interface AddSceneProps {
   beforeState: GitRenderData;
@@ -35,19 +36,21 @@ export const AddScene: React.FC<AddSceneProps> = ({
 
   return (
     <AbsoluteFill>
-      {/* Fade from before to after state */}
-      <div
-        style={{ opacity: interpolate(frame, [0, duration * 0.3], [1, 0]) }}
-      >
-        <GitGraph renderData={beforeState} hoveredNode={hoveredNode} />
-      </div>
-      <div
-        style={{
-          opacity: interpolate(frame, [duration * 0.3, duration], [0, 1]),
-        }}
-      >
-        <GitGraph renderData={afterState} hoveredNode={hoveredNode} />
-      </div>
+      <RemotionFrameProvider frame={frame}>
+        {/* Fade from before to after state */}
+        <div
+          style={{ opacity: interpolate(frame, [0, duration * 0.3], [1, 0]) }}
+        >
+          <GitGraph renderData={beforeState} hoveredNode={hoveredNode} />
+        </div>
+        <div
+          style={{
+            opacity: interpolate(frame, [duration * 0.3, duration], [0, 1]),
+          }}
+        >
+          <GitGraph renderData={afterState} hoveredNode={hoveredNode} />
+        </div>
+      </RemotionFrameProvider>
 
       {/* Flying file label */}
       <div

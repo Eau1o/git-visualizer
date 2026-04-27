@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, useCurrentFrame, interpolate, spring } from 'remotion';
 import { GitRenderData } from '../../types';
 import { GitGraph } from '../GitGraph';
+import { RemotionFrameProvider } from '../shared/useFrame';
 
 export interface InitSceneProps {
   beforeState: GitRenderData;
@@ -31,7 +32,9 @@ export const InitScene: React.FC<InitSceneProps> = ({
         transform: `scale(${scale})`,
       }}
     >
-      <GitGraph renderData={afterState} hoveredNode={hoveredNode} />
+      <RemotionFrameProvider frame={frame}>
+        <GitGraph renderData={afterState} hoveredNode={hoveredNode} />
+      </RemotionFrameProvider>
     </AbsoluteFill>
   );
 };

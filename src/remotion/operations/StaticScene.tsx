@@ -1,7 +1,8 @@
 import React from 'react';
-import { AbsoluteFill } from 'remotion';
+import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { GitRenderData } from '../../types';
 import { GitGraph } from '../GitGraph';
+import { RemotionFrameProvider } from '../shared/useFrame';
 
 interface StaticSceneProps {
   beforeState: GitRenderData;
@@ -14,9 +15,12 @@ export const StaticScene: React.FC<StaticSceneProps> = ({
   afterState,
   hoveredNode,
 }) => {
+  const frame = useCurrentFrame();
   return (
     <AbsoluteFill>
-      <GitGraph renderData={afterState} hoveredNode={hoveredNode} />
+      <RemotionFrameProvider frame={frame}>
+        <GitGraph renderData={afterState} hoveredNode={hoveredNode} />
+      </RemotionFrameProvider>
     </AbsoluteFill>
   );
 };

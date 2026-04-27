@@ -1,5 +1,6 @@
 import React from 'react';
-import { spring, useCurrentFrame } from 'remotion';
+import { spring } from 'remotion';
+import { useFrame } from './useFrame';
 
 interface ConnectionLineProps {
   fromX: number;
@@ -9,6 +10,7 @@ interface ConnectionLineProps {
   color: string;
   isMerge?: boolean;
   delay?: number;
+  frame?: number;
 }
 
 export const ConnectionLine: React.FC<ConnectionLineProps> = ({
@@ -19,8 +21,10 @@ export const ConnectionLine: React.FC<ConnectionLineProps> = ({
   color,
   isMerge = false,
   delay = 0,
+  frame: _frame,
 }) => {
-  const frame = useCurrentFrame();
+  const ctxFrame = useFrame();
+  const frame = _frame ?? ctxFrame;
   const progress = spring({
     frame: Math.max(0, frame - delay),
     fps: 30,
