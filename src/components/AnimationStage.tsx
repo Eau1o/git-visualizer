@@ -69,7 +69,7 @@ export const AnimationStage: React.FC<AnimationStageProps> = ({
     return () => {
       player.removeEventListener('ended', handler);
     };
-  }, [playerRef]);
+  }, [playerRef, operation]); // Re-attach listener when Player remounts (scene change)
 
   if (!scene) {
     return (
