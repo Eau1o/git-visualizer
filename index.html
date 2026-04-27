@@ -4,81 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Git 可视化教室</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- 顶部导航 -->
-  <header class="top-bar">
-    <div class="top-bar-left">
-      <span class="logo">📊 Git 可视化教室</span>
-    </div>
-    <div class="top-bar-center">
-      <div class="progress-bar">
-        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-      </div>
-      <span class="progress-text" id="progressText">0 / 0</span>
-    </div>
-    <div class="top-bar-right">
-      <select id="sceneSelect" class="scene-select">
-        <option value="0">📍 本地仓库基础</option>
-        <option value="1">🌿 分支操作</option>
-        <option value="2">☁️ 远程协作</option>
-        <option value="3">↩️ 撤销与修复</option>
-      </select>
-    </div>
-  </header>
-
-  <!-- 主体三栏 -->
-  <main class="main-content">
-    <!-- 左侧：场景引导 -->
-    <aside class="panel panel-left" id="scenarioPanel">
-      <div class="panel-header">📋 场景引导</div>
-      <div class="scenario-title" id="scenarioTitle">加载中...</div>
-      <div class="step-list" id="stepList"></div>
-    </aside>
-
-    <!-- 中间：Canvas 可视化 -->
-    <section class="canvas-area">
-      <div class="zone-bar">
-        <div class="zone zone-workspace">
-          <div class="zone-label">📁 工作区</div>
-          <div class="zone-files" id="workspaceFiles"></div>
-        </div>
-        <div class="zone-arrow">→</div>
-        <div class="zone zone-staging">
-          <div class="zone-label">📦 暂存区</div>
-          <div class="zone-files" id="stagingFiles"></div>
-        </div>
-        <div class="zone-arrow">→</div>
-        <div class="zone zone-repo">
-          <div class="zone-label">🗄️ 仓库</div>
-          <div class="zone-files" id="repoFiles"></div>
-        </div>
-      </div>
-      <canvas id="gitCanvas" width="700" height="400"></canvas>
-    </section>
-
-    <!-- 右侧：命令面板 -->
-    <aside class="panel panel-right" id="commandPanel">
-      <div class="panel-header">🔧 命令面板</div>
-      <div class="command-hint" id="commandHint">点击命令执行操作</div>
-      <div class="command-list" id="commandList"></div>
-    </aside>
-  </main>
-
-  <!-- 底部输出 -->
-  <footer class="output-bar" id="outputBar">
-    <div class="output-header">💬 输出</div>
-    <div class="output-content" id="outputContent">
-      <div class="output-line welcome">欢迎使用 Git 可视化教室！选择一个场景开始学习。</div>
-    </div>
-  </footer>
-
-  <script src="js/state.js"></script>
-  <script src="js/engine.js"></script>
-  <script src="js/animations.js"></script>
-  <script src="js/commands.js"></script>
-  <script src="js/scenarios.js"></script>
-  <script src="js/app.js"></script>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
