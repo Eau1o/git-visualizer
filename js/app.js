@@ -138,6 +138,7 @@ function updateProgress() {
 // === 文件区域 ===
 function renderFileZones() {
   const ws = [], st = [], rp = [];
+  if (!gitState || !gitState.files) return;
   Object.entries(gitState.files).forEach(([name, status]) => {
     if (status === 'untracked' || status === 'modified') {
       ws.push(`<span class="file-tag ${status}">${name}</span>`);
