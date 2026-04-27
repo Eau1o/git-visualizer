@@ -1,5 +1,6 @@
 import { Config } from '@remotion/cli/config';
+import type { WebpackOverrideFn } from '@remotion/bundler';
 
-Config.overrideWebpackConfig((config) => {
-  return config;
-});
+Config.overrideWebpackConfig(((currentConfiguration) => {
+  return currentConfiguration;
+}) as WebpackOverrideFn);
