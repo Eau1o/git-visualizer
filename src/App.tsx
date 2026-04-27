@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { PlayerRef } from '@remotion/player';
 import { GitState } from './state/GitState';
 import { defineCommands, SCENARIOS } from './lib/commands';
@@ -38,39 +38,58 @@ export default function App() {
   const scenario = SCENARIOS[currentScenarioIdx];
   const step = scenario?.steps[currentStepIdx];
 
+  // Process createFiles when entering a step
+  useEffect(() => {
+    const currentStep = scenario?.steps[currentStepIdx];
+    if (currentStep?.createFiles) {
+      let changed = false;
+      currentStep.createFiles.forEach((f: string) => {
+        if (!gitState.files[f]) {
+          gitState.createFile(f);
+          changed = true;
+        }
+      });
+      if (changed) {
+        setRenderData(getRenderData());
+      }
+    }
+  }, [currentScenarioIdx, currentStepIdx, scenario]);
+
   const appendLog = useCallback((text: string, type: LogEntry['type']) => {
     setLogs((prev) => [...prev, { text, type }]);
   }, []);
 
-  const advanceStep = useCallback(() => {
+  const advanceStep = () => {
     if (currentStepIdx < scenario.steps.length - 1) {
       setCurrentStepIdx((prev) => prev + 1);
       setStepExecutedCommands(new Set());
-      setCompletedSteps((prev) => {
-        const next = new Set(prev);
-        return next;
-      });
     } else {
       appendLog('🎉 恭喜完成本场景！', 'success');
     }
-  }, [currentStepIdx, scenario, appendLog]);
+  };
 
-  const finishCommand = useCallback(
-    (commandId: string) => {
-      if (!step) return;
+  const finishCommand = (commandId: string) => {
+    if (!step) return;
 
-      const nextExecuted = new Set(stepExecutedCommands);
-      nextExecuted.add(commandId);
-      setStepExecutedCommands(nextExecuted);
-      setCompletedSteps((prev) => new Set(prev).add(step.id));
+    setStepExecutedCommands((prev) => {
+      const next = new Set(prev);
+      next.add(commandId);
 
-      const allDone = step.availableCommands.every((c) => nextExecuted.has(c));
+      const allDone = step.availableCommands.every((c) => next.has(c));
       if (allDone) {
-        setTimeout(advanceStep, 600);
+        setTimeout(() => advanceStep(), 600);
       }
-    },
-    [step, stepExecutedCommands, advanceStep],
-  );
+
+      return next;
+    });
+
+    setCompletedSteps((prev) => new Set(prev).add(step.id));
+  };
+
+  const finishCommandRef = useRef(finishCommand);
+  finishCommandRef.current = finishCommand;
+
+  const pendingCommandRef = useRef<string | null>(null);
 
   const handleAnimationComplete = useCallback(() => {
     const after = getRenderData();
@@ -80,12 +99,10 @@ export default function App() {
     setBeforeState(null);
 
     if (pendingCommandRef.current) {
-      finishCommand(pendingCommandRef.current);
+      finishCommandRef.current(pendingCommandRef.current);
       pendingCommandRef.current = null;
     }
-  }, [finishCommand]);
-
-  const pendingCommandRef = useRef<string | null>(null);
+  }, []);
 
   const executeCommand = useCallback(
     (commandId: string) => {
@@ -121,7 +138,7 @@ export default function App() {
         finishCommand(commandId);
       }
     },
-    [isAnimating, step, commands, appendLog, finishCommand],
+    [isAnimating, step, commands, appendLog],
   );
 
   const available = step
