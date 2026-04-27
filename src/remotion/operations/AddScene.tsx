@@ -55,7 +55,7 @@ export const AddScene: React.FC<AddSceneProps> = ({
           position: 'absolute',
           left: fileX,
           top: fileY,
-          opacity: interpolate(frame, [0, duration * 0.85], [1, 1, 0]),
+          opacity: interpolate(frame, [0, duration * 0.85, duration], [1, 1, 0]),
         }}
       >
         <div
@@ -81,7 +81,7 @@ export const AddScene: React.FC<AddSceneProps> = ({
             background: 'rgba(45, 164, 78, 0.1)',
             opacity: interpolate(
               Math.min(frame - (duration - 5), 5),
-              [0, 5],
+              [0, 2.5, 5],
               [0, 0.3, 0],
             ),
             pointerEvents: 'none',
