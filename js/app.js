@@ -7,6 +7,7 @@ const cmdManager = new CommandManager(gitState, gitEngine, animator);
 let currentScenarioIdx = 0;
 let currentStepIdx = 0;
 let isExecuting = false;
+let executedCommands = new Set();
 
 // === DOM 引用 ===
 const $ = id => document.getElementById(id);
@@ -37,6 +38,7 @@ function loadScenario(index) {
   if (!scenario) return;
   currentScenarioIdx = index;
   currentStepIdx = 0;
+  executedCommands.clear();
   scenarioTitle.textContent = `${scenario.title} — ${scenario.subtitle}`;
   renderSteps();
   renderCommands();
@@ -66,6 +68,7 @@ function renderSteps() {
     if (idx < currentStepIdx) {
       div.addEventListener('click', () => {
         currentStepIdx = idx;
+        executedCommands.clear();
         renderSteps();
         renderCommands();
         updateProgress();
@@ -91,6 +94,20 @@ function renderCommands() {
       appendOutput(`🔄 模拟修改: ${committed[0][0]}`, 'info');
       renderFileZones();
     }
+  }
+
+  // 自动跳过无可执行命令的步骤（如 autoModify）
+  if (step.availableCommands.length === 0) {
+    setTimeout(advanceStep, 1500);
+    return;
+  }
+
+  // 创建步骤需要的文件
+  if (step.createFiles && Array.isArray(step.createFiles)) {
+    step.createFiles.forEach(f => {
+      if (!gitState.files[f]) gitState.createFile(f);
+    });
+    renderFileZones();
   }
 
   const available = new Set(step.availableCommands);
@@ -187,7 +204,20 @@ function executeCommand(commandId) {
       setTimeout(() => { isExecuting = false; renderCommands(); }, 200);
     }
 
-    setTimeout(advanceStep, 1500);
+    const stepCmds = step.availableCommands;
+    executedCommands.add(commandId);
+    const allDone = stepCmds.every(c => executedCommands.has(c));
+
+    if (allDone) {
+      setTimeout(advanceStep, 1200);
+    } else {
+      // 步内还有未执行的命令，提示用户
+      setTimeout(() => {
+        const remaining = stepCmds.filter(c => !executedCommands.has(c));
+        const labels = remaining.map(c => cmdManager.commands.find(cmd => cmd.id === c)?.label || c);
+        appendOutput(`💡 该步骤还需执行: ${labels.join(', ')}`, 'info');
+      }, 500);
+    }
   } else {
     appendOutput(result.message, 'error');
     isExecuting = false;

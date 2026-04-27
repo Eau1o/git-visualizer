@@ -57,6 +57,7 @@ const SCENARIOS = [
         id: 'branch-1',
         instruction: '先做几次提交，为分支做准备',
         hint: '💡 分支是基于某个提交创建的',
+        createFiles: ['app.js', 'utils.js'],
         availableCommands: ['add','commit'],
         lockedCommands: ['branch','checkout','merge','log','remote','push','pull','clone','restore','reset','revert']
       },
@@ -99,6 +100,7 @@ const SCENARIOS = [
         id: 'remote-1',
         instruction: '先做一些提交作为基础',
         hint: '💡 需要有一些提交才能推送到远程',
+        createFiles: ['api.js', 'config.js'],
         availableCommands: ['add','commit'],
         lockedCommands: ['remote','push','pull','clone','log','restore','reset','revert']
       },
